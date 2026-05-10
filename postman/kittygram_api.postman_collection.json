@@ -1,0 +1,114 @@
+{
+  "info": {
+    "name": "Kittygram API v1",
+    "description": "Тут больше восьми запросов. В переменных коллекции выставите base_url, token подставьте после шага «Auth — получить токен».",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "token", "value": "" },
+    { "key": "collection_id", "value": "1" },
+    { "key": "cat_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Cats — список (гость)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/cats/"
+      }
+    },
+    {
+      "name": "2. Cats — создать",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"PostCat\",\n  \"color\": \"white\",\n  \"birth_year\": 2022\n}"
+        },
+        "url": "{{base_url}}/api/v1/cats/"
+      }
+    },
+    {
+      "name": "3. Tags — список",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/tags/"
+      }
+    },
+    {
+      "name": "4. Collections — публичный список",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/collections/?ordering=-created_at"
+      }
+    },
+    {
+      "name": "5. Auth — получить токен",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"owner\",\n  \"password\": \"pass12345\"\n}"
+        },
+        "url": "{{base_url}}/api/v1/auth/token/"
+      }
+    },
+    {
+      "name": "6. Collections — создать подборку",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Демо подборка\",\n  \"description\": \"Из Postman\",\n  \"visibility\": \"private\",\n  \"tags\": []\n}"
+        },
+        "url": "{{base_url}}/api/v1/collections/"
+      }
+    },
+    {
+      "name": "7. Collections — мои",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+        "url": "{{base_url}}/api/v1/collections/my/"
+      }
+    },
+    {
+      "name": "8. Collections — добавить кота",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Token {{token}}" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cat_id\": {{cat_id}},\n  \"position\": 1\n}"
+        },
+        "url": "{{base_url}}/api/v1/collections/{{collection_id}}/add_cat/"
+      }
+    },
+    {
+      "name": "9. Негатив: избранное своей подборки (ожидаем 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Token {{token}}" }],
+        "url": "{{base_url}}/api/v1/collections/{{collection_id}}/favorite/"
+      }
+    },
+    {
+      "name": "10. Collections — деталь (после публикации)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/collections/{{collection_id}}/"
+      }
+    }
+  ]
+}
